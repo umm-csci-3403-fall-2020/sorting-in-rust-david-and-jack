@@ -98,7 +98,9 @@ fn quicksort<T: PartialOrd + std::fmt::Debug>(v: &mut [T]) {
     
     // ...
 
-    let smaller = 99999999; // Totally wrong – you should fix this.
+    let smaller = 1; // Totally wrong – you should fix this.
+
+    v.swap(smaller-1,smaller);
 
     // Sort all the items < pivot
     quicksort(&mut v[0..smaller]);
@@ -158,7 +160,54 @@ fn merge<T: PartialOrd + std::marker::Copy + std::fmt::Debug>(xs: Vec<T>, ys: Ve
 
     // This is totally wrong and will not sort. You should replace it
     // with something useful. :)
-    return xs;
+
+
+    // Creating a new vector to return the results
+    let mut merged_vec: Vec<T> = Vec::new();
+
+    let vec_one = xs;
+    let vec_two = ys;
+
+    let index_one = 0;
+    let index_two = 0;
+
+    // Run through the length of the both vectors if necessary, maybe a little clunky.
+    let count = 0;
+    while count < (vec_one.len() + vec_two.len()) {
+        
+        // If vec_one has run through all of it's elt push all elts of vec_two
+        if index_one == vec_one.len() + 1 {
+            for elt in (vec_two.len() - index_two)..vec_two.len() {
+                merged_vec.push(elt);
+            } 
+            break;
+        }
+
+        // If vec_two has run through all of it's elts push all elts of vec_one
+        if index_two == vec_two.len() + 1 {
+            for elt in (vec_one.len() - index_one)..vec_one.len() {
+                let pushed_elt = vec_one[index_one] as T;
+                merged_vec.push(elt);
+            }
+            break;
+        }
+
+        // If the elt in vec one is less than the elt in vec 2 push vec 1 to the result vector and increment index_one.
+        if vec_one[index_one] < vec_two[index_two] {
+            //merged_vec.push(vec_one[index_one]);
+            let pushed_elt = vec_one[index_one];
+            let pushed_elt = pushed_elt as T;
+            merged_vec.push(pushed_elt);
+            index_one = index_one + 1;
+        } else {
+            merged_vec.push(vec_two[index_two]);
+            index_two = index_two + 1;
+        }
+
+        count = count + 1;
+    }
+
+    return merged_vec;
 }
 
 fn is_sorted<T: PartialOrd>(slice: &[T]) -> bool {
