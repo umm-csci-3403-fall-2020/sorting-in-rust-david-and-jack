@@ -96,11 +96,18 @@ fn quicksort<T: PartialOrd + std::fmt::Debug>(v: &mut [T]) {
 
     // Now choose a pivot and do the organizing.
     
-    // ...
+    let mut smaller = 0;
 
-    let smaller = 1; // Totally wrong – you should fix this.
+    while smaller < length-1 {
+        if v[smaller] > v[smaller + 1]{
+            v.swap(smaller,smaller+1);
+            smaller+=1;
+        }else{
+            v.swap(smaller,smaller + 1);
+            smaller-=1;
+        }
+    }
 
-    v.swap(smaller-1,smaller);
 
     // Sort all the items < pivot
     quicksort(&mut v[0..smaller]);
@@ -109,6 +116,8 @@ fn quicksort<T: PartialOrd + std::fmt::Debug>(v: &mut [T]) {
     // here you can end up in infinite recursions.
     quicksort(&mut v[smaller+1..length]);
 }
+
+
 
 // Mergesort can't be done "in place", so it needs to return a _new_
 // Vec<T> of the sorted elements. The array elements need to have
@@ -141,6 +150,7 @@ fn merge_sort<T: PartialOrd + std::marker::Copy + std::fmt::Debug>(v: &[T]) -> V
     let left = merge_sort(&v[0..middle]);
     let right = merge_sort(&v[middle .. len]);
     let result = merge(left, right);
+    print!("Test");
     return result
 }
 
@@ -158,53 +168,62 @@ fn merge<T: PartialOrd + std::marker::Copy + std::fmt::Debug>(xs: Vec<T>, ys: Ve
     // vector, and then push all the remaining elements from the
     // other vector onto the result.
 
-    // This is totally wrong and will not sort. You should replace it
-    // with something useful. :)
-
-
+    
     // Creating a new vector to return the results
     let mut merged_vec: Vec<T> = Vec::new();
 
     let vec_one = xs;
     let vec_two = ys;
 
-    let index_one = 0;
-    let index_two = 0;
+    let mut index_one = 0;
+    let mut index_two = 0;
 
     // Run through the length of the both vectors if necessary, maybe a little clunky.
-    let count = 0;
-    while count < (vec_one.len() + vec_two.len()) {
+    let mut count = 0;
+    while count < ((vec_one.len() + vec_two.len()) - 1) {
         
         // If vec_one has run through all of it's elt push all elts of vec_two
-        if index_one == vec_one.len() + 1 {
-            for elt in (vec_two.len() - index_two)..vec_two.len() {
-                merged_vec.push(elt);
-            } 
-            break;
-        }
+        // if index_one == vec_one.len() + 1 {
+        //     for elt in (vec_two.len() -(vec_two.len() - index_two))..vec_two.len() {
+        //         let pushed_elt = vec_two[elt] as T;
+        //         merged_vec.push(pushed_elt);
+        //     } 
+        //     break;
+        // }
 
-        // If vec_two has run through all of it's elts push all elts of vec_one
-        if index_two == vec_two.len() + 1 {
-            for elt in (vec_one.len() - index_one)..vec_one.len() {
-                let pushed_elt = vec_one[index_one] as T;
-                merged_vec.push(elt);
-            }
-            break;
-        }
+        // // If vec_two has run through all of it's elts push all elts of vec_one
+        // if index_two == vec_two.len() + 1 {
+        //     for elt in (vec_one.len() - (vec_one.len() - index_one))..vec_one.len() {
+        //         let pushed_elt = vec_one[elt] as T;
+        //         merged_vec.push(pushed_elt);
+        //     }
+        //     break;
+        // }
 
         // If the elt in vec one is less than the elt in vec 2 push vec 1 to the result vector and increment index_one.
         if vec_one[index_one] < vec_two[index_two] {
-            //merged_vec.push(vec_one[index_one]);
-            let pushed_elt = vec_one[index_one];
-            let pushed_elt = pushed_elt as T;
-            merged_vec.push(pushed_elt);
-            index_one = index_one + 1;
-        } else {
+            
+            //let pushed_elt = vec_one[index_one] as T;
             merged_vec.push(vec_two[index_two]);
-            index_two = index_two + 1;
+            index_one += 1;
+
+        } else if vec_one[index_one] == vec_two[index_two] {
+
+            merged_vec.push(vec_one[index_one]);
+            merged_vec.push(vec_two[index_two]);
+            println!("pushing elt");
+            
+            index_one += 1;
+            index_two += 1;
+
+        } else {
+            
+            merged_vec.push(vec_two[index_two]);
+            index_two += 1;
+        
         }
 
-        count = count + 1;
+        count += 1;
     }
 
     return merged_vec;
