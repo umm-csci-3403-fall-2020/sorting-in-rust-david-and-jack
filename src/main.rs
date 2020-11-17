@@ -97,14 +97,15 @@ fn quicksort<T: PartialOrd + std::fmt::Debug>(v: &mut [T]) {
     // Now choose a pivot and do the organizing.
     
     let mut smaller = 0;
+    let mut end = length-1;
 
-    while smaller < length-1 {
+    while smaller < end {
         if v[smaller] > v[smaller + 1]{
             v.swap(smaller,smaller+1);
             smaller+=1;
         }else{
-            v.swap(smaller,smaller + 1);
-            smaller-=1;
+            v.swap(smaller+1,end);
+            end-=1;
         }
     }
 
