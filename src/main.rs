@@ -96,9 +96,19 @@ fn quicksort<T: PartialOrd + std::fmt::Debug>(v: &mut [T]) {
 
     // Now choose a pivot and do the organizing.
     
-    // ...
+    let mut smaller = 0;
+    let mut end = length-1;
 
-    let smaller = 99999999; // Totally wrong – you should fix this.
+    while smaller < end {
+        if v[smaller] > v[smaller + 1]{
+            v.swap(smaller,smaller+1);
+            smaller+=1;
+        }else{
+            v.swap(smaller+1,end);
+            end-=1;
+        }
+    }
+
 
     // Sort all the items < pivot
     quicksort(&mut v[0..smaller]);
@@ -107,6 +117,8 @@ fn quicksort<T: PartialOrd + std::fmt::Debug>(v: &mut [T]) {
     // here you can end up in infinite recursions.
     quicksort(&mut v[smaller+1..length]);
 }
+
+
 
 // Mergesort can't be done "in place", so it needs to return a _new_
 // Vec<T> of the sorted elements. The array elements need to have
@@ -139,6 +151,7 @@ fn merge_sort<T: PartialOrd + std::marker::Copy + std::fmt::Debug>(v: &[T]) -> V
     let left = merge_sort(&v[0..middle]);
     let right = merge_sort(&v[middle .. len]);
     let result = merge(left, right);
+    print!("Test");
     return result
 }
 
@@ -156,9 +169,39 @@ fn merge<T: PartialOrd + std::marker::Copy + std::fmt::Debug>(xs: Vec<T>, ys: Ve
     // vector, and then push all the remaining elements from the
     // other vector onto the result.
 
-    // This is totally wrong and will not sort. You should replace it
-    // with something useful. :)
-    return xs;
+    
+    // Creating a new vector to return the results
+    let mut merged_vec = Vec::<T>::new();
+
+    let vec_one = xs;
+    let vec_two = ys;
+
+    let mut index_one = 0;
+    let mut index_two = 0;
+
+    // Run through the length of the both vectors if necessary, maybe a little clunky.   
+    while index_one < vec_one.len() && index_two < vec_two.len() {
+        // If the elt in vec one is less than the elt in vec 2 push vec 1 to the result vector and increment index_one.
+        if vec_one[index_one] < vec_two[index_two] {
+            //let pushed_elt = vec_one[index_one] as T;
+            merged_vec.push(vec_one[index_one]);
+            index_one += 1;
+        } else {
+            merged_vec.push(vec_two[index_two]);
+            index_two += 1;
+        }
+    }
+    while index_one < vec_one.len() {
+        merged_vec.push(vec_one[index_one]);
+        index_one += 1;
+    }
+
+    while index_two < vec_two.len() {
+        merged_vec.push(vec_two[index_two]);
+        index_two += 1;
+    }
+
+    return merged_vec;
 }
 
 fn is_sorted<T: PartialOrd>(slice: &[T]) -> bool {
